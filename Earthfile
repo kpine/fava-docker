@@ -1,5 +1,8 @@
 VERSION 0.6
 
+ARG BEANCOUNT_VERSION=2.3.5
+ARG FAVA_VERSION=1.23.1
+
 build:
   FROM python:3
 
@@ -9,8 +12,8 @@ build:
   RUN python -m venv /app
 
   ENV PATH "/app/bin:$PATH"
-  RUN pip install --progress-bar=off --use-pep517 --upgrade beancount==2.3.5
-  RUN pip install --progress-bar=off --upgrade fava[excel]==1.23.1
+  RUN pip install --progress-bar=off --use-pep517 --upgrade beancount==$BEANCOUNT_VERSION
+  RUN pip install --progress-bar=off --upgrade fava[excel]==$FAVA_VERSION
 
   SAVE ARTIFACT /app
 
@@ -27,4 +30,4 @@ docker:
     EXPOSE 5000
     ENTRYPOINT ["fava"]
 
-    SAVE IMAGE --push ghcr.io/kpine/fava:latest
+    SAVE IMAGE --push ghcr.io/kpine/fava:latest ghcr.io/kpine/fava:$FAVA_VERSION
