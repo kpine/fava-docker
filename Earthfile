@@ -24,6 +24,7 @@ docker:
     COPY +build/app .
 
     ENV PATH "/app/bin:$PATH"
+    ENV PYTHONPATH="/fava"
     ENV FAVA_HOST "0.0.0.0"
     ENV BEANCOUNT_FILE
 
