@@ -4,16 +4,13 @@ build:
   FROM python:3
 
   RUN apt-get update \
-   && apt-get install -y build-essential libxml2-dev libxslt1-dev curl git
+   && apt-get install -y build-essential libxml2-dev libxslt1-dev
 
   RUN python -m venv /app
 
-  WORKDIR /src/beancount
-  RUN git clone --branch=2.3.5 --single-branch --depth=1 https://github.com/beancount/beancount .
-
   ENV PATH "/app/bin:$PATH"
-  RUN CFLAGS=-s pip install --use-pep517 -U .
-  RUN pip install fava[excel]
+  RUN pip install --progress-bar=off --use-pep517 --upgrade beancount==2.3.5
+  RUN pip install --progress-bar=off --upgrade fava[excel]==1.23.1
 
   SAVE ARTIFACT /app
 
