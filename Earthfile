@@ -12,8 +12,9 @@ build:
   RUN python -m venv /app
 
   ENV PATH "/app/bin:$PATH"
-  RUN pip install --progress-bar=off --use-pep517 --upgrade beancount==$BEANCOUNT_VERSION
-  RUN pip install --progress-bar=off --upgrade fava[excel]==$FAVA_VERSION
+  RUN pip install --progress-bar=off --no-cache-dir --upgrade uvicorn[standard]
+  RUN pip install --progress-bar=off --no-cache-dir --upgrade beancount==$BEANCOUNT_VERSION --use-pep517
+  RUN pip install --progress-bar=off --no-cache-dir --upgrade fava[excel]==$FAVA_VERSION
 
   SAVE ARTIFACT /app
 
@@ -22,12 +23,12 @@ docker:
 
     WORKDIR /app
     COPY +build/app .
+    COPY ufava.py /app/bin/ufava
 
     ENV PATH "/app/bin:$PATH"
-    ENV FAVA_HOST "0.0.0.0"
-    ENV BEANCOUNT_FILE
+    ENV BEANCOUNT_FILES
 
     EXPOSE 5000
-    ENTRYPOINT ["fava"]
+    ENTRYPOINT ["ufava"]
 
     SAVE IMAGE --push ghcr.io/kpine/fava:latest ghcr.io/kpine/fava:$FAVA_VERSION
