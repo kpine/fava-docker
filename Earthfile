@@ -1,6 +1,6 @@
 VERSION 0.6
 
-build-beancount:
+build-base:
   FROM python:3
 
   RUN apt-get update \
@@ -11,7 +11,7 @@ build-beancount:
   ARG BEANCOUNT_VERSION=2.3.5
 
   ENV PATH "/app/bin:$PATH"
-  RUN pip install --progress-bar=off --no-cache-dir --upgrade uvicorn[standard]
+  RUN pip install --progress-bar=off --no-cache-dir --upgrade uvicorn[standard]==0.21 pdfminer.six==20221105
   RUN pip install --progress-bar=off --no-cache-dir --upgrade beancount==$BEANCOUNT_VERSION --use-pep517
 
   SAVE ARTIFACT /app
@@ -42,7 +42,7 @@ build-fava-dist:
   SAVE ARTIFACT dist/fava-*.whl /dist/
 
 build-fava-dev:
-  FROM +build-beancount
+  FROM +build-base
 
   ARG --required FAVA_VERSION
   COPY (+build-fava-dist/dist --FAVA_VERSION=$FAVA_VERSION) /tmp
@@ -51,7 +51,7 @@ build-fava-dev:
   SAVE ARTIFACT /app
 
 build-fava:
-  FROM +build-beancount
+  FROM +build-base
 
   ARG --required FAVA_VERSION
   RUN pip install --progress-bar=off --no-cache-dir --upgrade fava[excel]==$FAVA_VERSION
