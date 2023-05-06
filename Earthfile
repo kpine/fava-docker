@@ -11,7 +11,7 @@ build-base:
   ARG BEANCOUNT_VERSION=2.3.5
 
   ENV PATH "/app/bin:$PATH"
-  RUN pip install --progress-bar=off --no-cache-dir --upgrade uvicorn[standard]==0.21 pdfminer.six==20221105
+  RUN pip install --progress-bar=off --no-cache-dir --upgrade uvicorn[standard]==0.22 pdfminer.six==20221105
   RUN pip install --progress-bar=off --no-cache-dir --upgrade beancount==$BEANCOUNT_VERSION --use-pep517
 
   SAVE ARTIFACT /app
