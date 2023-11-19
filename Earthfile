@@ -11,7 +11,9 @@ build-base:
   ARG BEANCOUNT_VERSION=2.3.6
 
   ENV PATH "/app/bin:$PATH"
-  RUN pip install --progress-bar=off --no-cache-dir --upgrade uvicorn[standard]==0.24.0.post1 pdfminer.six==20221105
+  # https://github.com/beancount/beancount/issues/788
+  # RUN pip install --progress-bar=off --no-cache-dir --upgrade uvicorn[standard]==0.24.0.post1 pdfminer.six==20221105
+  RUN pip install --progress-bar=off --no-cache-dir --upgrade uvicorn[standard]==0.24.0.post1
   RUN pip install --progress-bar=off --no-cache-dir --upgrade beancount==$BEANCOUNT_VERSION --use-pep517
 
   SAVE ARTIFACT /app
@@ -55,6 +57,9 @@ build-fava:
 
   ARG --required FAVA_VERSION
   RUN pip install --progress-bar=off --no-cache-dir --upgrade fava[excel]==$FAVA_VERSION
+  # https://github.com/beancount/beancount/issues/788
+  RUN pip uninstall -y pdfminer2 \
+   && pip install --progress-bar=off --no-cache-dir --upgrade pdfminer.six==20221105
 
   SAVE ARTIFACT /app
 
