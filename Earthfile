@@ -1,17 +1,17 @@
-VERSION 0.6
+VERSION 0.7
 
 build-base:
-  FROM python:3
+  FROM python:3.11
 
   RUN apt-get update \
    && apt-get install -y build-essential libxml2-dev libxslt1-dev
 
   RUN python -m venv /app
 
-  ARG BEANCOUNT_VERSION=2.3.5
+  ARG BEANCOUNT_VERSION=2.3.6
 
   ENV PATH "/app/bin:$PATH"
-  RUN pip install --progress-bar=off --no-cache-dir --upgrade uvicorn[standard]==0.22 pdfminer.six==20221105
+  RUN pip install --progress-bar=off --no-cache-dir --upgrade uvicorn[standard]==0.24.0.post1 pdfminer.six==20221105
   RUN pip install --progress-bar=off --no-cache-dir --upgrade beancount==$BEANCOUNT_VERSION --use-pep517
 
   SAVE ARTIFACT /app
@@ -29,7 +29,7 @@ build-fava-frontend:
   SAVE ARTIFACT /fava /build
 
 build-fava-dist:
-  FROM python:3
+  FROM python:3.11
 
   RUN python -m pip install tox twine
 
@@ -59,7 +59,7 @@ build-fava:
   SAVE ARTIFACT /app
 
 docker:
-    FROM python:3-slim
+    FROM python:3.11-slim
 
     ARG FAVA_VERSION=1.24.4
 
@@ -76,7 +76,7 @@ docker:
     SAVE IMAGE --push ghcr.io/kpine/fava:latest ghcr.io/kpine/fava:$FAVA_VERSION
 
 docker-dev:
-  FROM python:3-slim
+  FROM python:3.11-slim
 
   ARG --required FAVA_COMMIT
 
