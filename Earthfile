@@ -66,7 +66,7 @@ build-fava:
 docker:
     FROM python:3.11-slim
 
-    ARG FAVA_VERSION=1.26.2
+    ARG FAVA_VERSION=1.26.3
 
     WORKDIR /app
     COPY (+build-fava/app --FAVA_VERSION=$FAVA_VERSION) .
