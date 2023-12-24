@@ -78,6 +78,13 @@ docker:
     EXPOSE 5000
     ENTRYPOINT ["ufava"]
 
+    ARG EARTHLY_GIT_SHORT_HASH
+    ARG BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+    LABEL org.opencontainers.image.revision=$EARTHLY_GIT_SHORT_HASH
+    LABEL org.opencontainers.image.source=https://github.com/kpine/fava-docker
+    LABEL org.opencontainers.image.created=$BUILD_DATE
+
     SAVE IMAGE --push ghcr.io/kpine/fava:latest ghcr.io/kpine/fava:$FAVA_VERSION
 
 docker-dev:
