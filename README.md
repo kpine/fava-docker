@@ -16,3 +16,8 @@ services:
     volumes:
       - "./fava:/fava"
 ```
+
+## development
+```
+$ nix develop
+```
