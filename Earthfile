@@ -78,7 +78,7 @@ docker:
   COPY ufava.py /app/bin/ufava
 
   ENV PATH "/app/bin:$PATH"
-  ENV BEANCOUNT_FILES
+  ENV BEANCOUNT_FILE
 
   EXPOSE 5000
   ENTRYPOINT ["/usr/bin/tini", "--", "ufava"]
@@ -102,7 +102,7 @@ docker-dev:
   COPY ufava.py /app/bin/ufava
 
   ENV PATH "/app/bin:$PATH"
-  ENV BEANCOUNT_FILES
+  ENV BEANCOUNT_FILE
 
   EXPOSE 5000
   ENTRYPOINT ["ufava"]
