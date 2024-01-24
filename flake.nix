@@ -19,6 +19,7 @@
         packages = with pkgs;
           [python311 virtualenv]
           ++ (with pkgs.python311Packages; [
+            a2wsgi
             pip
             uvicorn
           ])

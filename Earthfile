@@ -13,8 +13,10 @@ build-base:
   ENV PATH "/app/bin:$PATH"
   # https://github.com/beancount/beancount/issues/788
   # RUN pip install --progress-bar=off --no-cache-dir --upgrade uvicorn[standard]==0.24.0.post1 pdfminer.six==20221105
-  RUN pip install --progress-bar=off --no-cache-dir --upgrade uvicorn[standard]==0.24.0.post1
-  RUN pip install --progress-bar=off --no-cache-dir --upgrade beancount==$BEANCOUNT_VERSION --use-pep517
+  RUN pip install --progress-bar=off --no-cache-dir --upgrade \
+        uvicorn[standard]==0.24.0.post1 \
+        a2wsgi==1.10.0 \
+        beancount==$BEANCOUNT_VERSION
 
   SAVE ARTIFACT /app
 
@@ -64,28 +66,31 @@ build-fava:
   SAVE ARTIFACT /app
 
 docker:
-    FROM python:3.11-slim
+  FROM python:3.11-slim
 
-    ARG FAVA_VERSION=1.26.3
+  RUN apt-get update \
+   && apt-get install -y tini
 
-    WORKDIR /app
-    COPY (+build-fava/app --FAVA_VERSION=$FAVA_VERSION) .
-    COPY ufava.py /app/bin/ufava
+  ARG FAVA_VERSION=1.26.3
 
-    ENV PATH "/app/bin:$PATH"
-    ENV BEANCOUNT_FILES
+  WORKDIR /app
+  COPY (+build-fava/app --FAVA_VERSION=$FAVA_VERSION) .
+  COPY ufava.py /app/bin/ufava
 
-    EXPOSE 5000
-    ENTRYPOINT ["ufava"]
+  ENV PATH "/app/bin:$PATH"
+  ENV BEANCOUNT_FILES
 
-    ARG EARTHLY_GIT_SHORT_HASH
-    ARG BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+  EXPOSE 5000
+  ENTRYPOINT ["/usr/bin/tini", "--", "ufava"]
 
-    LABEL org.opencontainers.image.revision=$EARTHLY_GIT_SHORT_HASH
-    LABEL org.opencontainers.image.source=https://github.com/kpine/fava-docker
-    LABEL org.opencontainers.image.created=$BUILD_DATE
+  ARG EARTHLY_GIT_SHORT_HASH
+  ARG BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-    SAVE IMAGE --push ghcr.io/kpine/fava:latest ghcr.io/kpine/fava:$FAVA_VERSION
+  LABEL org.opencontainers.image.revision=$EARTHLY_GIT_SHORT_HASH
+  LABEL org.opencontainers.image.source=https://github.com/kpine/fava-docker
+  LABEL org.opencontainers.image.created=$BUILD_DATE
+
+  SAVE IMAGE --push ghcr.io/kpine/fava:latest ghcr.io/kpine/fava:$FAVA_VERSION
 
 docker-dev:
   FROM python:3.11-slim
