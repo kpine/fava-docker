@@ -71,7 +71,7 @@ docker:
   RUN apt-get update \
    && apt-get install -y tini
 
-  ARG FAVA_VERSION=1.27.1
+  ARG FAVA_VERSION=1.27.2
 
   WORKDIR /app
   COPY (+build-fava/app --FAVA_VERSION=$FAVA_VERSION) .
