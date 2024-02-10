@@ -1,7 +1,7 @@
 VERSION 0.7
 
 build-base:
-  FROM python:3.11
+  FROM python:3.12
 
   RUN apt-get update \
    && apt-get install -y build-essential libxml2-dev libxslt1-dev
@@ -33,7 +33,7 @@ build-fava-frontend:
   SAVE ARTIFACT /fava /build
 
 build-fava-dist:
-  FROM python:3.11
+  FROM python:3.12
 
   RUN python -m pip install tox twine
 
@@ -66,7 +66,7 @@ build-fava:
   SAVE ARTIFACT /app
 
 docker:
-  FROM python:3.11-slim
+  FROM python:3.12-slim
 
   RUN apt-get update \
    && apt-get install -y tini
@@ -93,7 +93,7 @@ docker:
   SAVE IMAGE --push ghcr.io/kpine/fava:latest ghcr.io/kpine/fava:$FAVA_VERSION
 
 docker-dev:
-  FROM python:3.11-slim
+  FROM python:3.12-slim
 
   ARG --required FAVA_COMMIT
 
