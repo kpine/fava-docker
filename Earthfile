@@ -14,8 +14,8 @@ build-base:
   # https://github.com/beancount/beancount/issues/788
   # RUN pip install --progress-bar=off --no-cache-dir --upgrade uvicorn[standard]==0.24.0.post1 pdfminer.six==20221105
   RUN pip install --progress-bar=off --no-cache-dir --upgrade \
-        uvicorn[standard]==0.24.0.post1 \
-        a2wsgi==1.10.0 \
+        uvicorn[standard]==0.29.0 \
+        a2wsgi==1.10.4 \
         beancount==$BEANCOUNT_VERSION
 
   SAVE ARTIFACT /app
@@ -61,7 +61,7 @@ build-fava:
   RUN pip install --progress-bar=off --no-cache-dir --upgrade fava[excel]==$FAVA_VERSION
   # https://github.com/beancount/beancount/issues/788
   RUN pip uninstall -y pdfminer2 \
-   && pip install --progress-bar=off --no-cache-dir --upgrade pdfminer.six==20221105
+   && pip install --progress-bar=off --no-cache-dir --upgrade pdfminer.six==20231228
 
   SAVE ARTIFACT /app
 
@@ -71,7 +71,7 @@ docker:
   RUN apt-get update \
    && apt-get install -y tini
 
-  ARG FAVA_VERSION=1.27.2
+  ARG FAVA_VERSION=1.27.3
 
   WORKDIR /app
   COPY (+build-fava/app --FAVA_VERSION=$FAVA_VERSION) .
